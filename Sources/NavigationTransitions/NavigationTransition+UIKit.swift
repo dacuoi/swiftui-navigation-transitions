@@ -329,17 +329,18 @@ extension UIGestureRecognizer {
 @available(tvOS, unavailable)
 final class NavigationGestureRecognizerDelegate: NSObject, UIGestureRecognizerDelegate {
 	private unowned let navigationController: UINavigationController
+	private let maxWidthTouch: CGFloat
 
-	init(controller: UINavigationController) {
+	init(controller: UINavigationController, maxWidthTouch: CGFloat = 0) {
 		self.navigationController = controller
+		self.maxWidthTouch = maxWidthTouch
 	}
 
 	public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-            if let view = gestureRecognizer.view {
-               return touch.location(in: view).x < view.bounds.width * (1/4)
+            if let view = gestureRecognizer.view, self.maxWidthTouch > 0 {
+               return touch.location(in: view).x < self.maxWidthTouch
            }
-           return true
-           //        return !(touch.view is UISlider)
+           return !(touch.view is UISlider)
         }
 
 	// TODO: swizzle instead
