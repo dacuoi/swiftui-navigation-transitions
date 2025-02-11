@@ -133,7 +133,8 @@ extension UINavigationController {
 
 	public func setNavigationTransition(
 		_ transition: AnyNavigationTransition,
-		interactivity: AnyNavigationTransition.Interactivity = .default
+		interactivity: AnyNavigationTransition.Interactivity = .default,
+		maxWidthTouch: CGFloat = 0
 	) {
 		if defaultDelegate == nil {
 			defaultDelegate = delegate
@@ -177,13 +178,13 @@ extension UINavigationController {
 
 		#if !os(tvOS) && !os(visionOS)
 		if defaultEdgePanRecognizer.strongDelegate == nil {
-			defaultEdgePanRecognizer.strongDelegate = NavigationGestureRecognizerDelegate(controller: self)
+			defaultEdgePanRecognizer.strongDelegate = NavigationGestureRecognizerDelegate(controller: self, maxWidthTouch: maxWidthTouch)
 		}
 
 		if defaultPanRecognizer == nil {
 			defaultPanRecognizer = UIPanGestureRecognizer()
 			defaultPanRecognizer.targets = defaultEdgePanRecognizer.targets // https://stackoverflow.com/a/60526328/1922543
-			defaultPanRecognizer.strongDelegate = NavigationGestureRecognizerDelegate(controller: self)
+			defaultPanRecognizer.strongDelegate = NavigationGestureRecognizerDelegate(controller: self, maxWidthTouch: maxWidthTouch)
 			view.addGestureRecognizer(defaultPanRecognizer)
 		}
 
@@ -191,14 +192,14 @@ extension UINavigationController {
 			edgePanRecognizer = UIScreenEdgePanGestureRecognizer()
 			edgePanRecognizer.edges = .left
 			edgePanRecognizer.addTarget(self, action: #selector(handleInteraction))
-			edgePanRecognizer.strongDelegate = NavigationGestureRecognizerDelegate(controller: self)
+			edgePanRecognizer.strongDelegate = NavigationGestureRecognizerDelegate(controller: self, maxWidthTouch: maxWidthTouch)
 			view.addGestureRecognizer(edgePanRecognizer)
 		}
 
 		if panRecognizer == nil {
 			panRecognizer = UIPanGestureRecognizer()
 			panRecognizer.addTarget(self, action: #selector(handleInteraction))
-			panRecognizer.strongDelegate = NavigationGestureRecognizerDelegate(controller: self)
+			panRecognizer.strongDelegate = NavigationGestureRecognizerDelegate(controller: self, maxWidthTouch: maxWidthTouch)
 			view.addGestureRecognizer(panRecognizer)
 		}
 
