@@ -334,6 +334,14 @@ final class NavigationGestureRecognizerDelegate: NSObject, UIGestureRecognizerDe
 		self.navigationController = controller
 	}
 
+	public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+            if let view = gestureRecognizer.view {
+               return touch.location(in: view).x < view.bounds.width * (1/4)
+           }
+           return true
+           //        return !(touch.view is UISlider)
+        }
+
 	// TODO: swizzle instead
 	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
 		let isNotOnRoot = navigationController.viewControllers.count > 1
